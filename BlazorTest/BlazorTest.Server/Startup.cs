@@ -13,6 +13,17 @@ namespace BlazorTest.Server
 {
     public class Startup
     {
+        #region Fields
+
+        private IConfiguration _config;
+
+        #endregion
+
+        public Startup(IConfiguration config)
+        {
+            this._config = config;
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
@@ -24,7 +35,7 @@ namespace BlazorTest.Server
                     new[] { "application/octet-stream" });
             });
 
-            services.AddDbContext<TodoDbContext>(options => options.UseSqlServer(Configuration));
+            services.AddDbContext<TodoDbContext>(options => options.UseSqlServer(this._config.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("BlazorTest.Shared")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
